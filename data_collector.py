@@ -21,24 +21,26 @@ def fetch_dorks(seeds, max_results):
     return seeds[:max_results]
 
 def fetch_existing_dorks_from_gist(gist_id):
-    # Use GitHub API to fetch existing gist content (temp gist)
-    # Placeholder: return empty list
-    return []
+    url = f"https://api.github.com/gists/{gist_id}"
+    response = requests.get(url)
+    if response.status_code != 200:
+        print(f"Warning: Could not fetch gist {gist_id} (status {response.status_code})")
+        return []
+    files = response.json()['files']
+    # Assume single file, get content lines except header
+    content = list(files.values())[0]['content']
+    lines = content.split('\n')[1:]
+    return [line.strip() for line in lines if line.strip()]
 
 def merge_dorks(existing, new):
-    # Deduplicate by string matching
     return list(set(existing) | set(new))
 
 def save_to_csv(dorks, filename='wptemp.csv'):
     with open(filename, 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(['dork'])  # header
+        writer.writerow(['dork'])
         for dork in dorks:
             writer.writerow([dork])
-
-def update_temp_gist(gist_id, filename):
-    # Use GitHub API with authentication to upload CSV to temp gist
-    pass
 
 def main():
     args = parse_args()
@@ -47,7 +49,6 @@ def main():
     new_dorks = fetch_dorks(seeds, args.max_results)
     combined = merge_dorks(existing_dorks, new_dorks)
     save_to_csv(combined)
-    update_temp_gist(args.raw_gist_id, 'wptemp.csv')
     print(f"Collected {len(combined)} total dorks.")
 
 if __name__ == '__main__':
