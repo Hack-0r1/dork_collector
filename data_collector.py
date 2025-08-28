@@ -1,5 +1,6 @@
 import argparse
 import csv
+import os
 import requests
 
 def parse_args():
@@ -16,20 +17,20 @@ def load_seeds(seed_file):
     return seeds
 
 def fetch_dorks(seeds, max_results):
-    # Placeholder for actual collection logic (e.g., Google scraping or API)
-    # For demo, just return seeds limited by max_results
+    # Your actual data harvesting logic here; currently returns limited seeds.
     return seeds[:max_results]
 
 def fetch_existing_dorks_from_gist(gist_id):
+    token = os.getenv('GH_TOKEN')
+    headers = {"Authorization": f"token {token}"} if token else {}
     url = f"https://api.github.com/gists/{gist_id}"
-    response = requests.get(url)
+    response = requests.get(url, headers=headers)
     if response.status_code != 200:
         print(f"Warning: Could not fetch gist {gist_id} (status {response.status_code})")
         return []
     files = response.json()['files']
-    # Assume single file, get content lines except header
     content = list(files.values())[0]['content']
-    lines = content.split('\n')[1:]
+    lines = content.split('\n')[1:]  # skip header
     return [line.strip() for line in lines if line.strip()]
 
 def merge_dorks(existing, new):
