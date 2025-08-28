@@ -1,0 +1,54 @@
+import argparse
+import csv
+import requests
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Collect WordPress Google dorks")
+    parser.add_argument('--stack', required=True, help='Stack type e.g. wordpress')
+    parser.add_argument('--seed-file', required=True, help='Path to seed dork queries file')
+    parser.add_argument('--raw-gist-id', required=True, help='Gist ID for temp CSV storage')
+    parser.add_argument('--max-results', type=int, default=50, help='Max results to fetch')
+    return parser.parse_args()
+
+def load_seeds(seed_file):
+    with open(seed_file, 'r') as f:
+        seeds = [line.strip() for line in f if line.strip()]
+    return seeds
+
+def fetch_dorks(seeds, max_results):
+    # Placeholder for actual collection logic (e.g., Google scraping or API)
+    # For demo, just return seeds limited by max_results
+    return seeds[:max_results]
+
+def fetch_existing_dorks_from_gist(gist_id):
+    # Use GitHub API to fetch existing gist content (temp gist)
+    # Placeholder: return empty list
+    return []
+
+def merge_dorks(existing, new):
+    # Deduplicate by string matching
+    return list(set(existing) | set(new))
+
+def save_to_csv(dorks, filename='wptemp.csv'):
+    with open(filename, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['dork'])  # header
+        for dork in dorks:
+            writer.writerow([dork])
+
+def update_temp_gist(gist_id, filename):
+    # Use GitHub API with authentication to upload CSV to temp gist
+    pass
+
+def main():
+    args = parse_args()
+    seeds = load_seeds(args.seed_file)
+    existing_dorks = fetch_existing_dorks_from_gist(args.raw_gist_id)
+    new_dorks = fetch_dorks(seeds, args.max_results)
+    combined = merge_dorks(existing_dorks, new_dorks)
+    save_to_csv(combined)
+    update_temp_gist(args.raw_gist_id, 'wptemp.csv')
+    print(f"Collected {len(combined)} total dorks.")
+
+if __name__ == '__main__':
+    main()
