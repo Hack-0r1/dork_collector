@@ -2,13 +2,12 @@ name: Hourly WordPress Dork Collector
 
 on:
   schedule:
-    - cron: '0 * * * *'   # runs at the top of every hour
-  workflow_dispatch:     # manual trigger
+    - cron: '0 * * * *'  # runs at the top of every hour
+  workflow_dispatch:  # manual trigger
 
 jobs:
   collect:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
 
