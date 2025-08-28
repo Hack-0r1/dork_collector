@@ -45,7 +45,7 @@ def main():
     args = parse_args()
     token = args.token or os.getenv('GH_TOKEN')
     if not token:
-        raise ValueError("GitHub token must be provided via --token or GH_TOKEN environment variable")
+       raise ValueError("GitHub token not provided")
     local_dorks = read_csv(args.local_csv)
     old_gist_dorks = fetch_gist_content(args.gist_id, token)
     combined_dorks = merge_dorks(old_gist_dorks, local_dorks)
