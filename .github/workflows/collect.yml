@@ -21,9 +21,7 @@ jobs:
         run: pip install requests beautifulsoup4
 
       - name: Run Temp Collector
-        run: |
-          python data_collector.py --stack wordpress --seed-file seeds/wordpress.txt --raw-gist-id ${{ secrets.TEMP_GIST_ID }} --max-results 50
+        run: python data_collector.py --stack wordpress --seed-file seeds/wordpress.txt --raw-gist-id ${{ secrets.TEMP_GIST_ID }} --max-results 50
 
       - name: Merge to Final Raw Gist
-        run: |
-          python update_gist.py --local-csv wptemp.csv --gist-id ${{ secrets.FINAL_GIST_ID }} --token ${{ secrets.GITHUB_TOKEN }}
+        run: python update_gist.py --local-csv wptemp.csv --gist-id ${{ secrets.FINAL_GIST_ID }} --token ${{ secrets.GITHUB_TOKEN }}
