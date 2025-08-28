@@ -30,7 +30,7 @@ def merge_dorks(old_dorks, new_dorks):
 
 def update_gist(gist_id, token, dorks):
     url = f"https://api.github.com/gists/{gist_id}"
-    headers = {'Authorization': f'token {token}'}
+    headers = {'Authorization': f'token {token}'}   
     content = "dork\n" + "\n".join(sorted(dorks))
     payload = {
         "files": {
@@ -50,4 +50,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
